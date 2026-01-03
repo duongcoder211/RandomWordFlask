@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- <link rel="stylesheet" href="randomword.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='randomword.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='Icons/dice.png') }}" type="image/x-icon">
+    <title>Random Word</title>
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+            <h1 class="name-app">Random Words</h1>
+            <p class="author">Cre: DuongCoder</p>
+            <div class="control-area">
+                <div id="clear-list">
+                    <img src="{{ url_for('static', filename='Icons/broom.png') }}" id="clear-list-button" alt="Clear" srcset="">
+                </div>
+                <div id="display-list">
+                    <img src="{{ url_for('static', filename='Icons/visible.png') }}" id="visible-list-button" alt="Display" srcset="">
+                </div>
+                <div id="change-language">
+                    <img src="{{ url_for('static', filename='Icons/russia.png') }}" id="change-language-button" alt="Change" srcset="">
+                </div>
+                <div id="start-random">
+                    <img src="{{ url_for('static', filename='Icons/dice.png') }}" id="start-random-button" alt="Start" srcset="">
+                </div>
+            </div>
+            <div class="input-area">
+                <input type="text" id="input-word" placeholder="Enter word here!" autocomplete="off">
+                <div class="add-button" id="add-button">
+                    <img src="{{ url_for('static', filename='Icons/send.png') }}" alt="Add" srcset="">
+                </div>  
+            </div>
+        </header>
+        <div class="list-area"></div>
+        <div class="alert">
+            <button class="close"><img src="{{ url_for('static', filename='Icons/close.png') }}" alt="Close" srcset=""></button>
+            <div class="previous"><img src="{{ url_for('static', filename='Icons/left-arrow.gif') }}"  alt="Back" srcset=""></div>
+            <div class="next"><img src="{{ url_for('static', filename='Icons/right-arrow.gif') }}"  alt="Next" srcset=""></div>
+            <div class="content-alert">
+                <div class="front"></div>
+                <div class="back"></div>
+            </div>
+        </div>
+    </div>
+    <!-- <script type="module" src="./randomword.js"></script> -->
+    <script type="module" src="{{ url_for('static', filename='randomword.js') }}"></script>
+</body>
+</html>

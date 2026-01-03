@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block tags %}
+    {% for i, word in words %}
+        <div class="tags" id="{{i}}" name="{% if isRus %} {{word.rus_word}} {% else %} {{word.eng_word}} {% endif %}">
+            <p class="content">{{word.vie_word}}</p>
+            <div class="setting-buttons">
+                <div class="tag_button" id="edit-button">
+                    <img src="static/Icons/edit.png" alt="Edit" srcset="">
+                </div>
+                <div class="tag_button" id="delete-button">
+                    <img src="static/Icons/delete.png" alt="Delete" srcset="">
+            </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
