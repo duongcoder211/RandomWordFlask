@@ -1,6 +1,6 @@
 // import { stringInputExport } from "./dictionaryrandomrussian.js";
 // import { stringExportEng } from "./dictionaryrandomenglish.js";
-const cyrillicRegex = /^(?!.*-)[\p{Script=Cyrillic}\p{P}\p{S}]+$/u;
+const cyrillicRegex = /^(?!.*-)[\p{Script=Cyrillic}\p{P}\p{S}\s\d]+$/u;
 const latinRegex = /^(?!.*-)[A-Za-z\d\s\p{P}\p{S}]+$/u;
 const vnRegex = /^(?!.*-)[\s\da-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\p{P}\p{S}]+$/u;
 let clearBtn = document.querySelector("#clear-list-button");
