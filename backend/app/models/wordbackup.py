@@ -1,7 +1,21 @@
-from db import db
+from ..db import db
 from sqlalchemy.orm import Mapped, mapped_column, validates
 from sqlalchemy import Integer, String
 import re
+import unicodedata
+
+def vie_word_normalized_func(string):
+    if not string:
+        return ""
+    # Chuyển về chữ thường
+    text = string.lower()
+    # Thay thế 'đ' -> 'dz'
+    text = string.replace('đ', 'dz')
+    # Bỏ dấu
+    text = unicodedata.normalize('NFD', text)
+    text = ''.join(c for c in text if unicodedata.category(c) != 'Mn')
+    return text
+
 
 class WordBackup(db.Model):
     __tablename__ = 'wordbackup'
@@ -10,6 +24,7 @@ class WordBackup(db.Model):
     rus_word: Mapped[String] = mapped_column(db.String(50), unique=False, nullable=True, default="Введите семантику слова!")
     eng_word: Mapped[String] = mapped_column(db.String(50), unique=False, nullable=True, default='Enter word mean!')
     vie_word: Mapped[String] = mapped_column(db.String(50), unique=True, nullable=False)
+    vie_word_normalized: Mapped[String] = mapped_column(db.String(50), unique=False, nullable=False, default='')
 
     # def __init__(self, **kwargs):
     #     for key, value in kwargs.items():

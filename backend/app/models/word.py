@@ -1,4 +1,4 @@
-from db import db
+from ..db import db
 from sqlalchemy.orm import Mapped, mapped_column, validates
 from sqlalchemy import Integer, String
 import re
@@ -16,6 +16,7 @@ def vie_word_normalized_func(string):
     text = unicodedata.normalize('NFD', text)
     text = ''.join(c for c in text if unicodedata.category(c) != 'Mn')
     return text
+
 class Word(db.Model):
     __tablename__ = 'words'
     

@@ -1,10 +1,9 @@
 from flask import flash, redirect, render_template, request, session, Blueprint, jsonify, url_for
 from sqlalchemy import text
-from models.word import Word
-from models.wordbackup import WordBackup
-from db.database import db
-from utils import string_train
-alphabet = 'aăâbcdđeêghiklmnpqstwz'
+from ..models.word import Word
+from ..models.wordbackup import WordBackup
+from ..db.database import db
+from ..utils import string_train
 # import json
 
 main_router = Blueprint("app", __name__)

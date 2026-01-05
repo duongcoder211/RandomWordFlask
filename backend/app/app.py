@@ -1,8 +1,9 @@
 from flask import Flask, render_template, redirect, request
 from flask_migrate import Migrate
-from core import setting
-from db import db
-from api.endpoints import main_router
+from .core import setting
+from .db import db
+from .api.endpoints import main_router
+# from api.endpoints import main_router
 
 app = Flask(__name__) # => name of this file (app.py) not (main.py or anyname.py)
 
