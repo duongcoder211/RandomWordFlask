@@ -1,7 +1,10 @@
 from flask import flash, redirect, render_template, request, session, Blueprint, jsonify, url_for
+from sqlalchemy import text
 from models.word import Word
+from models.wordbackup import WordBackup
 from db.database import db
 from utils import string_train
+alphabet = 'aăâbcdđeêghiklmnpqstwz'
 # import json
 
 main_router = Blueprint("app", __name__)
@@ -18,7 +21,7 @@ viru = """
     Phải, đành phải-Кому (3) приходиться, прийтись; Bất đắc dĩ phải-Пришлось; Cạn lời, hết lời để nói- У 2 нет слов; Cố định, không thay đổi-Постоянный; Bên ngoài-Внешний; Được đề cập đến-Относится к 3;
     Lốp xe, dây tín hiệu-Шина;Nguồn điện-Электропитание; Bên trong-Внутренний; Âm thanh-Акустический; Loa-Колонка;Tiếng gõ-Стук;Chỗ nối, mối nối-Стык;Lưỡi lê-Штык;Có thể, có khả năng-Суметь;
     Làm ồn, gây ồn-Шуметь;Hề, buồn cười-Шут;Tiếng rít-Шипит;Ổ bánh mì-Сайка;Băng đảng, bọn, lũ/ cái chậu-Шайка;No-Сытый;Đã khâu-Шитый;Con cú mèo-Сова;Đường may, khâu-Шов;Hư hỏng-Шалить;
-    Phоng cách-Стиль; Điềm tĩnh, lặng im-Штиль;Bên trong, bên ngoài cái gì-Внутри, вне 2;Dùng làm gì/ làm việc ở/ dùng để-Служить чем/ где/ для чего;Đeo, mặc vào đâu-Надевать, надеть куда;
+    Phong cách-Стиль; Điềm tĩnh, lặng im-Штиль;Bên trong, bên ngoài cái gì-Внутри, вне 2;Dùng làm gì/ làm việc ở/ dùng để-Служить чем/ где/ для чего;Đeo, mặc vào đâu-Надевать, надеть куда;
     Đồ hoạ-Графический; Biểu tượng-Символьный;Thẻ nhớ-Карта памяти;Đen trắng-Чёрно белый;Có màu-Цветной;Giấy (tính từ)-Бумажный;Khả năng-Способность;Inch-Дюйм;Có khả năng-Способный;
     Nhận ra-Разпознавать, разпознать; Tốt nhất, tối ưu-Оптимальный;Sắc thái-Оттенка;Cho phép-Позволять;Ngoại vi-Периферийный;Khen-Хвалить, похвалить 4 за 4;Mắng-Ругать, отругать 4 за 4;
     Tôn trọng-Уважать 4 за 4; Toà nhà chọc trời-Небоскрёб; Danh tiếng-Репутация; Tiêu-Тратить;Dành-Занимать; Tướng-Генерал; Làm rõ-Уточнять-уточнить; Người làm nội trợ để kiếm tiền-Домрабоница; 
@@ -48,7 +51,8 @@ def load_root():
     #         db.session.add(Word(**vi_ru))
     # db.session.commit()
 
-    words = db.session.execute(db.select(Word).order_by(Word.vie_word)).scalars().all()
+    words = db.session.execute(db.select(Word).order_by(Word.vie_word_normalized)).scalars().all()
+    # words = db.session.execute(db.select(Word).order_by(Word.vie_word)).scalars().all()
     # res = [{"vie_word":  word.vie_word, "rus_word":  word.rus_word, "eng_word" : word.eng_word} for word in words]
     
     if isRus == False:
@@ -85,6 +89,14 @@ def add_or_update_word():
                         Word.query.filter(Word.eng_word == vi_en["eng_word"]).first().vie_word=vi_en["vie_word"]
                     else:
                         db.session.add(Word(**vi_en))
+
+                    #WordBackup
+                    if WordBackup.query.filter(WordBackup.vie_word == vi_en["vie_word"]).first() is not None:
+                        WordBackup.query.filter(WordBackup.vie_word == vi_en["vie_word"]).first().eng_word=vi_en["eng_word"]
+                    elif WordBackup.query.filter(WordBackup.eng_word == vi_en["eng_word"]).first() is not None:
+                        WordBackup.query.filter(WordBackup.eng_word == vi_en["eng_word"]).first().vie_word=vi_en["vie_word"]
+                    else:
+                        db.session.add(WordBackup(**vi_en))
             else:
                 outputviru = string_train(word_info, viekey="vie_word", foreignkey="rus_word")
                 for vi_ru in outputviru:
@@ -96,6 +108,14 @@ def add_or_update_word():
                         # db.session.execute(db.update(Word).where(Word.rus_word == vi_ru["rus_word"]).values(vie_word=vi_ru["vie_word"]))
                     else:
                         db.session.add(Word(**vi_ru))
+
+                    #WordBackup
+                    if WordBackup.query.filter(WordBackup.vie_word == vi_ru["vie_word"]).first() is not None:
+                        WordBackup.query.filter(WordBackup.vie_word == vi_ru["vie_word"]).first().rus_word = vi_ru["rus_word"]
+                    elif WordBackup.query.filter(WordBackup.rus_word == vi_ru["rus_word"]).first() is not None:
+                        WordBackup.query.filter(WordBackup.rus_word == vi_ru["rus_word"]).first().vie_word=vi_ru["vie_word"]
+                    else:
+                        db.session.add(WordBackup(**vi_ru))
             db.session.commit()
         except Exception as E:
             print(E)

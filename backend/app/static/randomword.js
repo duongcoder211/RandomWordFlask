@@ -1,8 +1,9 @@
 // import { stringInputExport } from "./dictionaryrandomrussian.js";
 // import { stringExportEng } from "./dictionaryrandomenglish.js";
-const cyrillicRegex = /^(?!.*-)[\p{Script=Cyrillic}\p{P}\p{S}\s\d]+$/u;
-const latinRegex = /^(?!.*-)[A-Za-z\d\s\p{P}\p{S}]+$/u;
-const vnRegex = /^(?!.*-)[\s\da-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ\p{P}\p{S}]+$/u;
+const cyrillicRegex = /^(?!.*-;)[\p{Script=Cyrillic}\p{P}\p{S}\s\d]+$/u;
+const latinRegex = /^(?!.*-;)[A-Za-z\d\s\p{P}\p{S}]+$/u;
+// const vnRegex = /^(?!.*-;)[\s\da-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳýỵỷỹ\p{P}\p{S}]+$/u;
+const vnRegex = /^[^\-\;]+$/;
 let clearBtn = document.querySelector("#clear-list-button");
 let randomBtn = document.querySelector("#start-random-button");
 let displayBtn = document.querySelector("#visible-list-button");
@@ -249,6 +250,19 @@ nextElm.onclick = () => {
     scriptAlert = tag.getAttribute("name");
 }
 
+tags.forEach((tg) => {
+    tg.addEventListener('click', () => {
+        let word = tg.querySelector('p').innerText.trim();
+        let mean = tg.getAttribute("name").trim();
+        newRandomIndex = Number(tg.getAttribute('id'))
+        isOrigin = true
+        alertElm.style.display = "block";
+        alertContent(word,mean);
+        wordAlert = word;
+        scriptAlert = mean;
+    })
+})
+
 editTabBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
         currentId = Number(btn.parentElement.parentElement.id);
@@ -259,7 +273,7 @@ editTabBtns.forEach((btn) => {
                 currentTab = btn.parentElement.parentElement;
                 active(btn.parentElement.parentElement);
                 inputElm.focus();
-                inputElm.value = currentTab.querySelector('p').innerText + " - " + currentTab.getAttribute("name").trim();
+                inputElm.value = currentTab.querySelector('p').innerText.trim() + " - " + currentTab.getAttribute("name").trim();
             } else {
                 inputElm.value = "";
             }
@@ -268,7 +282,7 @@ editTabBtns.forEach((btn) => {
             active(btn.parentElement.parentElement);
             currentTab = btn.parentElement.parentElement;
             inputElm.focus();
-            inputElm.value = currentTab.querySelector('p').innerText + " - " + currentTab.getAttribute("name").trim();
+            inputElm.value = currentTab.querySelector('p').innerText.trim() + " - " + currentTab.getAttribute("name").trim();
         }
         idEdit = currentId;
     })
@@ -277,7 +291,7 @@ editTabBtns.forEach((btn) => {
 deleteTabBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
         currentTab = btn.parentElement.parentElement
-        let deletedData = currentTab.querySelector('p').innerText + " - " + currentTab.getAttribute("name").trim();
+        let deletedData = currentTab.querySelector('p').innerText.trim() + " - " + currentTab.getAttribute("name").trim();
         deleteData(deletedData)
         if(isEdit) { inputElm.value = "" };
         isEdit = false;

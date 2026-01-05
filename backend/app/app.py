@@ -36,5 +36,6 @@ migrate = Migrate(app=app, db=db)
 
 with app.app_context():
     # db.drop_all()
+    # print('dropped!')
     # db.create_all()
     pass
