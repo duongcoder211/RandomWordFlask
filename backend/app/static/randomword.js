@@ -264,7 +264,8 @@ tags.forEach((tg) => {
 })
 
 editTabBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         currentId = Number(btn.parentElement.parentElement.id);
         deActive();
         if(currentId == idEdit) {
@@ -289,7 +290,8 @@ editTabBtns.forEach((btn) => {
 });
 
 deleteTabBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         currentTab = btn.parentElement.parentElement
         let deletedData = currentTab.querySelector('p').innerText.trim() + " - " + currentTab.getAttribute("name").trim();
         deleteData(deletedData)
