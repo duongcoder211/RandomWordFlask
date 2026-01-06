@@ -137,26 +137,48 @@ function checkInputString(stringInput) {
     currentLanguage = document.querySelector('#change-language-button').getAttribute('src')
     if(stringInput.includes(";")) {
         let arrInput = inputElm.value.split(";");
-        arrInput.forEach((elm) => {
+        let isInvalid = arrInput.some((elm) => {
             if(elm.trim() != "") { 
-                setWord = elm.trim();
-                if(setWord.includes("-")) {
-                    setWord = setWord.split("-");
-                    vncheck = vnRegex.test(setWord[0].trim())
-                    rucheck = cyrillicRegex.test(setWord[1].trim())
-                    encheck = latinRegex.test(setWord[1].trim())
-                    if(currentLanguage === '/static/Icons/russia.png') {
-                        return {isValid: (vncheck && rucheck), language: "russian"};
+                if(elm.includes("-")) {
+                    elm = elm.split("-");
+                    if((elm[0].trim() == '') || (elm[1].trim() == '')) {
+                        language = (currentLanguage == '/static/Icons/russia.png')? "russian" : "english";
+                        // this return does not interrupt the function and does not return anything if using forEach()
+                        // return {isValid: false, language: language}; 
+                        // this is return in callback scope
+                        return true
                     }
-                    else {
-                        return {isValid: (vncheck && encheck), language: "english"};
+                    
+                    vncheck = vnRegex.test(elm[0].trim())
+                    rucheck = cyrillicRegex.test(elm[1].trim())
+                    encheck = latinRegex.test(elm[1].trim())
+                    
+                    if((currentLanguage == '/static/Icons/russia.png') && ((vncheck && rucheck) == false)) {
+                        // return {isValid: false, language: "russian"};
+                        return true
+                    }
+                    else if ((currentLanguage == '/static/Icons/united-states.png') && ((vncheck && encheck) == false)) {
+                        // return {isValid: false, language: "english"};
+                        return true
                     }
                 } else {
-                    language = (currentLanguage == '/static/Icons/russia.png')? "russian" : "english";
-                    return {isValid: false, language: language};
+                    // language = (currentLanguage == '/static/Icons/russia.png')? "russian" : "english";
+                    // return {isValid: false, language: language};
+                    return true
                 }
             }
         })
+
+        if((currentLanguage == '/static/Icons/russia.png' && !isInvalid)) {
+            return {isValid: true, language: "russian"};
+        }
+        else if ((currentLanguage == '/static/Icons/united-states.png' && !isInvalid)) {
+            return {isValid: true, language: "english"};
+        }
+        else {
+            language = (currentLanguage == '/static/Icons/russia.png')? "russian" : "english";
+            return {isValid: false, language: language};
+        }
     }
 
     else {
@@ -171,11 +193,11 @@ function checkInputString(stringInput) {
             else {
                 return {isValid: (vncheck && encheck), language: "english"};
             }
-        } 
+        }
         else {
             language = (currentLanguage == '/static/Icons/russia.png')? "russian" : "english";
             return {isValid: false, language: language};
-        } 
+        }
     }
 };
 
@@ -183,6 +205,7 @@ let addOrEditTabs = function () {
     let contentTab = inputElm.value;
     if (contentTab.trim() == "") { alert("You must enter a word!"); return }
     let {isValid, language} = checkInputString(contentTab.trim())
+
     if (isEdit && isValid) {
         setContent(contentTab);
         inputElm.value = '';

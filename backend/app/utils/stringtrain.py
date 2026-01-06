@@ -7,10 +7,12 @@ def string_train(str: str = None, *, viekey: str = "vie_word", foreignkey: str =
 
     preoutput = str.split(";")
     for part in preoutput:
-        words = part.split("-")
-        vie = words[0].lower().strip()
-        foreign = words[1].lower().strip()
-        output.append({viekey: vie, foreignkey: foreign})
-    
+        if "-" in part:
+            words = part.split("-")
+            vie = words[0].lower().strip()
+            foreign = words[1].lower().strip()
+            output.append({viekey: vie, foreignkey: foreign})
+        else:
+            pass
     return output
 
